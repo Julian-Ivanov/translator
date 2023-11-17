@@ -49,7 +49,7 @@ def main():
     st.title("Microsoft Translator with Streamlit")
 
     # Input text
-    text = st.text_area("Enter the text to translate")
+    text = st.text_area("Enter the text to translate (Microsoft Translator automatically detects the language))")
 
     # Target language dropdown to select the languages
     target_language = st.selectbox("Select target language", list(languages.keys()))
