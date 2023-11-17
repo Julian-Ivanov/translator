@@ -1,10 +1,9 @@
 # Import necessary libraries
 import streamlit as st
 import requests
-from variables import deepl_key
 
 # Set your DeepL API key here
-deepl_api_key = deepl_key
+deepl_api_key = '25f727f2-4270-6944-171f-da78e41dcef0:fx'
 
 # Define the list of available languages and their language codes
 languages = {
