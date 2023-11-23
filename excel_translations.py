@@ -113,7 +113,16 @@ def translate_excel(file):
     return output
 
 def main():
-    st.title("Excel Translation Tool")
+    st.title("Excel File Translator Tool (DeepL and Microsoft Translator)")
+
+    # Explanation text
+    st.markdown("""
+        This program translates German text in an Excel file to English, French, Dutch, Swedish, Czech, and Slovak using different translators. 
+        The Excel file should contain two sheets, one named 'DeepL' and the other named 'Microsoft Translator'. 
+        Each sheet must start with the German column and follow this column order: German, English, French, Dutch, Swedish, Czech, Slovak. 
+        The German column should be filled with the texts to translate.
+        The exact names of the columns are not important, just the order.
+    """)
 
     # File uploader
     uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx'])
@@ -129,7 +138,7 @@ def main():
                 st.success('Translation Completed!')
                 st.download_button('Download Translated File', 
                                    data=output_file, 
-                                   file_name='translated_output.xlsx',
+                                   file_name='translated_excel.xlsx',
                                    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
 if __name__ == '__main__':
