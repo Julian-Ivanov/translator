@@ -103,11 +103,12 @@ def translate_excel(file):
     return output
 
 def main():
-    st.title("Excel File Translator Tool with DeepL Glossary Support")
+    st.title("Excel File Translator Tool with Glossary Support (DeepL based)")
 
     st.markdown("""
-        This tool translates German text in an Excel file to multiple languages using DeepL, with glossary support for consistent terminology.
-        The Excel file should contain a sheet named 'DeepL' with German in column A and translations in subsequent columns.
+        This tool translates German text in an Excel file to English, French, Dutch, Swedish, Czech, and Slovak using DeepL, with glossary support for consistent terminology.
+        \nThe sheet must start with the German column and follow this column order: German, English, French, Dutch, Swedish, Czech, Slovak. 
+        The German column should be filled with the texts to translate. The exact names of the columns are not important, just the order.
     """)
 
     uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx'])
