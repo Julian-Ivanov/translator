@@ -7,35 +7,12 @@ from io import BytesIO
 # DeepL API key
 deepl_api_key = '25f727f2-4270-6944-171f-da78e41dcef0:fx'
 
-# Define DeepL languages and their language codes
+# Define English language code for DeepL
 deepl_languages = {
     "English": {"code": "EN", "column": "B"},
-    "French": {"code": "FR", "column": "C"},
-    "Dutch": {"code": "NL", "column": "D"},
-    "Swedish": {"code": "SV", "column": "E"},
-    "Czech": {"code": "CS", "column": "F"},
-    "Slovak": {"code": "SK", "column": "G"},
 }
 
-# Example glossary entries for each language
-glossary_entries_map = {
-    "EN": "",
-    "FR": "",
-    "NL": "",
-    "SV": "",
-    "CS": "",
-    "SK": ""
-}
-# glossary_entries_map = {
-#     "EN": "Welt\tChupapi\nBeispiel\tMunjanju",
-#     "FR": "Welt\tChupapi\nBeispiel\tMunjanju",
-#     "NL": "Welt\tChupapi\nBeispiel\tMunjanju",
-#     "SV": "Welt\tChupapi\nBeispiel\tMunjanju",
-#     "CS": "Welt\tChupapi\nBeispiel\tMunjanju",
-#     "SK": "Welt\tChupapi\nBeispiel\tMunjanju"
-# }
-
-# Function to create a glossary and get its ID for a specific language
+# Create the glossary only once and store its ID
 def create_glossary(api_key, name, source_lang, target_lang, entries):
     url = "https://api-free.deepl.com/v2/glossaries"
     headers = {'Authorization': f'DeepL-Auth-Key {api_key}'}
@@ -47,17 +24,15 @@ def create_glossary(api_key, name, source_lang, target_lang, entries):
         'entries_format': 'tsv'
     }
     response = requests.post(url, headers=headers, data=data)
+    print("Glossary creation response:", response.json())
     return response.json().get('glossary_id')
 
-# Create glossaries for each target language
-glossary_ids = {}
-for language, info in deepl_languages.items():
-    entries = glossary_entries_map[info["code"]]
-    glossary_id = create_glossary(deepl_api_key, f"MyGlossary_{info['code']}", "DE", info["code"], entries)
-    glossary_ids[info["code"]] = glossary_id
-    print(f"Glossary ID for {language}: {glossary_id}")
+# Example glossary entries in TSV format
+glossary_entries = "Welt\tChupapi\nBeispiel\tMunjanju"
+glossary_id = create_glossary(deepl_api_key, "MyGlossary", "DE", "EN", glossary_entries)
+print("Glossary ID:", glossary_id)
 
-# Function to translate text using a specific glossary ID
+# Function to translate text using a single glossary ID
 def translate_text_with_glossary(text, target_lang, api_key, glossary_id):
     url = "https://api-free.deepl.com/v2/translate"
     data = {
@@ -88,14 +63,12 @@ def translate_excel(file):
         german_text_cell = sheet['A{}'.format(row)]
         german_text = german_text_cell.value
         if german_text:
-            for language, info in deepl_languages.items():
-                target_cell_ref = '{}{}'.format(info["column"], row)
-                if not sheet[target_cell_ref].value:
-                    glossary_id = glossary_ids.get(info["code"])
-                    translated_text = translate_text_with_glossary(
-                        german_text, info["code"], deepl_api_key, glossary_id
-                    )
-                    update_cell(sheet, target_cell_ref, translated_text)
+            target_cell_ref = 'B{}'.format(row)
+            if not sheet[target_cell_ref].value:
+                translated_text = translate_text_with_glossary(
+                    german_text, "EN", deepl_api_key, glossary_id
+                )
+                update_cell(sheet, target_cell_ref, translated_text)
 
     output = BytesIO()
     workbook.save(output)
@@ -106,8 +79,8 @@ def main():
     st.title("Excel File Translator Tool with DeepL Glossary Support")
 
     st.markdown("""
-        This tool translates German text in an Excel file to multiple languages using DeepL, with glossary support for consistent terminology.
-        The Excel file should contain a sheet named 'DeepL' with German in column A and translations in subsequent columns.
+        This tool translates German text in an Excel file to English using DeepL, with glossary support for consistent terminology.
+        The Excel file should contain a sheet named 'DeepL' with German in column A and English in column B.
     """)
 
     uploaded_file = st.file_uploader("Upload Excel file", type=['xlsx'])

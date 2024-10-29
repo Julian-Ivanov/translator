@@ -1,11 +1,8 @@
-# Import necessary libraries
 import streamlit as st
 import requests
 
-# Set your DeepL API key here
 deepl_api_key = '25f727f2-4270-6944-171f-da78e41dcef0:fx'
 
-# Define the list of available languages and their language codes
 languages = {
     "English": "EN",
     "French": "FR", 
@@ -16,7 +13,6 @@ languages = {
     "German": "DE", 
 }
 
-# Create a function to translate text using DeepL
 def translate_text_deepl(text_to_translate, target_language_code, api_key):
     url = "https://api-free.deepl.com/v2/translate"
     data = {
@@ -38,7 +34,7 @@ def translate_text_deepl(text_to_translate, target_language_code, api_key):
     else:
         return "Translation Error!"
 
-# Create the Streamlit web app
+# Streamlit web app
 def main():
     st.title("DeepL Translation with Streamlit")
 
